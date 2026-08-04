@@ -1,8 +1,9 @@
-# Indian Crop Pipeline App
 from flask import Flask, render_template, request, jsonify
+import pandas as pd
 import os
 
 app = Flask(__name__, static_folder='static')
+DATASET_PATH = 'India_Districts_Crop_Production_Processed.csv'
 
 @app.route('/')
 def index():

@@ -1,1 +1,3 @@
-console.log('Indian Crop Pipeline Loaded');
+document.addEventListener('DOMContentLoaded', () => {
+  console.log('App ready');
+});

@@ -1,3 +1,1 @@
-document.addEventListener('DOMContentLoaded', () => {
-  console.log('App ready');
-});
+console.log('Chart logic ready');

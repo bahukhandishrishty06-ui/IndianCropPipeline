@@ -1,3 +1,3 @@
-# Indian Crop Pipeline
+# Indian Crop Production & Machine Learning Pipeline
 
-Machine learning pipeline for crop yield prediction and analysis.
+Overview of data analytics and model architecture.

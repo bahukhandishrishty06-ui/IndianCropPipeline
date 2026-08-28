@@ -1,11 +1,13 @@
 
-Chart.defaults.font.family = "'Inter', sans-serif";
-Chart.defaults.font.size = 12;
-Chart.defaults.color = '#64748b';
-Chart.defaults.plugins.legend.display = false;
-Chart.defaults.responsive = true;
-Chart.defaults.maintainAspectRatio = false;
-Chart.defaults.animation = { duration: 800, easing: 'easeOutQuart' };
+if (typeof Chart !== 'undefined') {
+    Chart.defaults.font.family = "'Inter', sans-serif";
+    Chart.defaults.font.size = 12;
+    Chart.defaults.color = '#64748b';
+    Chart.defaults.plugins.legend.display = false;
+    Chart.defaults.responsive = true;
+    Chart.defaults.maintainAspectRatio = false;
+    Chart.defaults.animation = { duration: 800, easing: 'easeOutQuart' };
+}
 
 const COLORS = {
     primary: '#667eea',

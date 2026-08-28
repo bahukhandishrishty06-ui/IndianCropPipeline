@@ -469,4 +469,4 @@ if __name__ == "__main__":
     print(f"    Dataset: {len(df):,} rows x {len(df.columns)} columns")
     print(f"    States: {df['State'].nunique()} | Districts: {df['District'].nunique()} | Crops: {df['Crop'].nunique()}")
     print("\n    -> Open http://localhost:5000\n")
-    app.run(debug=True, port=5000)
+    app.run(host="0.0.0.0", port=5000, debug=True)

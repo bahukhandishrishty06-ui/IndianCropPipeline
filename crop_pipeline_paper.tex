@@ -11,6 +11,7 @@
 \usepackage{array}
 \usepackage{xcolor}
 \usepackage{setspace}
+\usepackage{float}
 \onehalfspacing
 
 % --- Hyperlinks ---
@@ -178,47 +179,37 @@ Recent literature published between 2023 and 2026 has focused heavily on applyin
 \subsection{Comparative System Flow}
 Figure~\ref{fig:comparison_flow} contrasts the structural limitations of existing research (2023--2026) against our proposed multi-crop soil-weather fusion framework.
 
-\begin{figure}[htbp]
+\begin{figure}[H]
 \centering
 \begin{tikzpicture}[
-    node distance=0.9cm and 0.6cm,
-    font=\sffamily\footnotesize,
-    % Style definitions
-    inputbox/.style={draw=bordergray, fill=lightbg, rounded corners=5pt, align=center, minimum width=2.4cm, minimum height=0.9cm, thick},
-    procbox/.style={draw=bordergray, fill=white, rounded corners=5pt, align=center, minimum width=2.4cm, minimum height=0.9cm, thick},
-    limitbox/.style={draw=accentred!70, fill=accentred!8, rounded corners=5pt, align=center, minimum width=2.8cm, minimum height=0.9cm, thick},
-    goodbox/.style={draw=softgreen!70, fill=softgreen!8, rounded corners=5pt, align=center, minimum width=2.8cm, minimum height=0.9cm, thick},
+    node distance=0.8cm and 1.2cm,
+    font=\sffamily\small,
+    box/.style={draw=bordergray, fill=lightbg, rounded corners=5pt, align=center, minimum width=3.8cm, minimum height=1cm, thick},
+    limitbox/.style={draw=accentred!70, fill=accentred!8, rounded corners=5pt, align=center, minimum width=4cm, minimum height=1.2cm, thick},
+    goodbox/.style={draw=softgreen!70, fill=softgreen!8, rounded corners=5pt, align=center, minimum width=4cm, minimum height=1.2cm, thick},
     redarrow/.style={-Latex, semithick, accentred!80},
     greenarrow/.style={-Latex, semithick, softgreen!80}
 ]
 
-    % === TOP ROW: Existing Works ===
-    \node (ex_title) [font=\sffamily\footnotesize\bfseries, text=accentred] {Existing Research (2023--2026)};
+    % === EXISTING WORKS (top) ===
+    \node (ex_label) [font=\sffamily\small\bfseries, text=accentred] {Existing Research (2023--2026)};
 
-    \node (ex_sat) [inputbox, below=0.4cm of ex_title] {\textbf{Satellite NDVI}\\\tiny Sharma et al. (2024)};
-    \node (ex_weather) [inputbox, right=of ex_sat] {\textbf{Weather Only}\\\tiny Singh et al. (2025)};
-    \node (ex_macro) [procbox, right=of ex_weather] {\textbf{State-Level Agg.}\\\tiny Patel \& Kumar (2025)};
-    \node (ex_single) [procbox, right=of ex_macro] {\textbf{Single Crop}\\\tiny Ramesh et al. (2026)};
-    \node (ex_limit) [limitbox, right=of ex_single] {\textbf{Limitations}\\\tiny No soil NPK\\\tiny $R^2 < 0.87$};
+    \node (ex_r1) [box, below=0.5cm of ex_label] {\textbf{Satellite NDVI / Weather Only}\\\footnotesize Sharma (2024), Singh (2025), Cedric (2023)};
+    \node (ex_r2) [box, below=0.5cm of ex_r1] {\textbf{State-Level Aggregation / Single Crop}\\\footnotesize Patel \& Kumar (2025), Ramesh (2026)};
+    \node (ex_limit) [limitbox, below=0.5cm of ex_r2] {\textbf{Key Limitations}\\\footnotesize No soil NPK $\cdot$ Single crop scope $\cdot$ $R^2 < 0.87$};
 
-    \path [redarrow] (ex_sat) -- (ex_weather);
-    \path [redarrow] (ex_weather) -- (ex_macro);
-    \path [redarrow] (ex_macro) -- (ex_single);
-    \path [redarrow] (ex_single) -- (ex_limit);
+    \path [redarrow] (ex_r1) -- (ex_r2);
+    \path [redarrow] (ex_r2) -- (ex_limit);
 
-    % === BOTTOM ROW: Our Work ===
-    \node (our_title) [font=\sffamily\footnotesize\bfseries, text=softgreen, below=1.6cm of ex_title] {Proposed Framework (This Work)};
+    % === OUR WORK (bottom) ===
+    \node (our_label) [font=\sffamily\small\bfseries, text=softgreen, below=1.2cm of ex_limit] {Proposed Framework (This Work)};
 
-    \node (our_data) [inputbox, below=0.4cm of our_title] {\textbf{Custom Dataset}\\\tiny 27,303 rows\\\tiny Soil + Weather + Spatial};
-    \node (our_fuse) [procbox, right=of our_data] {\textbf{Feature Fusion}\\\tiny NPK + Climate\\\tiny Categorical Encoding};
-    \node (our_ml) [procbox, right=of our_fuse] {\textbf{8 ML Models}\\\tiny LightGBM, XGBoost\\\tiny RF, DT, SVR, LR};
-    \node (our_deploy) [procbox, right=of our_ml] {\textbf{Web Dashboard}\\\tiny Flask REST API\\\tiny Chart.js Frontend};
-    \node (our_result) [goodbox, right=of our_deploy] {\textbf{Results}\\\tiny 19 crops, 475 dist.\\\tiny $R^2 = 0.9312$};
+    \node (our_r1) [box, below=0.5cm of our_label] {\textbf{Custom Dataset: 27,303 rows}\\\footnotesize Soil (NPK, pH, OC) + Weather + 475 Districts $\cdot$ 19 Crops};
+    \node (our_r2) [box, below=0.5cm of our_r1] {\textbf{Soil-Weather Feature Fusion + 8 ML Models}\\\footnotesize LightGBM, XGBoost, Random Forest, DT, SVR, LR};
+    \node (our_result) [goodbox, below=0.5cm of our_r2] {\textbf{Results: $R^2 = 0.9312$ $\cdot$ RMSE = 0.5765}\\\footnotesize Interactive Flask Web Dashboard + REST API};
 
-    \path [greenarrow] (our_data) -- (our_fuse);
-    \path [greenarrow] (our_fuse) -- (our_ml);
-    \path [greenarrow] (our_ml) -- (our_deploy);
-    \path [greenarrow] (our_deploy) -- (our_result);
+    \path [greenarrow] (our_r1) -- (our_r2);
+    \path [greenarrow] (our_r2) -- (our_result);
 
 \end{tikzpicture}
 \caption{Existing Research Paradigms (2023--2026) vs. Proposed Multi-Crop Soil-Weather Pipeline.}
@@ -228,7 +219,7 @@ Figure~\ref{fig:comparison_flow} contrasts the structural limitations of existin
 \subsection{Literature Comparison Summary}
 Table~\ref{tab:literature_comparison} summarizes the key differences between recent works and our proposed framework.
 
-\begin{table}[htbp]
+\begin{table}[H]
 \caption{Literature Comparison (2023--2026)}
 \label{tab:literature_comparison}
 \centering
@@ -266,7 +257,7 @@ The dataset contains \textbf{27,303 clean records} spanning \textbf{21 columns} 
 \subsection{Feature Dictionary}
 Table~\ref{tab:feature_dictionary} provides a detailed feature-by-feature specification of the custom dataset.
 
-\begin{table}[htbp]
+\begin{table}[H]
 \caption{Feature Dictionary of Custom Dataset}
 \label{tab:feature_dictionary}
 \centering
@@ -314,70 +305,36 @@ The system architecture follows a 4-tier modular design: Data Ingestion $\righta
 
 Figure~\ref{fig:system_pipeline} details the complete execution pipeline.
 
-\begin{figure}[htbp]
+\begin{figure}[H]
 \centering
 \begin{tikzpicture}[
-    node distance=0.5cm and 0.4cm,
-    font=\sffamily\footnotesize,
-    % Styles
-    mainbox/.style={draw=#1!70, fill=#1!8, rounded corners=6pt, align=center, minimum width=3.0cm, minimum height=1.8cm, thick},
-    subbox/.style={draw=bordergray, fill=white, rounded corners=3pt, align=left, font=\sffamily\scriptsize, inner sep=4pt},
+    node distance=1.0cm,
+    font=\sffamily\small,
+    stage/.style={draw=#1!70, fill=#1!8, rounded corners=6pt, align=center, minimum width=12cm, minimum height=1.2cm, thick},
     arrow/.style={-Latex, thick, primaryblue!80}
 ]
 
-    % Stage 1
-    \node (s1) [mainbox=primaryblue] {
-        \textbf{Data Ingestion}\\[2pt]
-        \scriptsize Custom CSV Dataset\\
-        \scriptsize 27,303 rows $\times$ 21 cols
+    % Vertical pipeline stages
+    \node (s1) [stage=primaryblue] {
+        \textbf{Stage 1: Data Ingestion} --- Custom CSV Dataset $\cdot$ 27,303 rows $\times$ 21 columns
     };
 
-    % Stage 2
-    \node (s2) [mainbox=accentpurple, right=of s1] {
-        \textbf{Feature Engineering}\\[2pt]
-        \scriptsize Label Encoding\\
-        \scriptsize StandardScaler\\
-        \scriptsize Soil-Weather Fusion
+    \node (s2) [stage=accentpurple, below=of s1] {
+        \textbf{Stage 2: Feature Engineering} --- Label Encoding $\cdot$ StandardScaler $\cdot$ Soil (N,P,K,pH,OC) + Weather Fusion
     };
 
-    % Stage 3
-    \node (s3) [mainbox=accentamber, right=of s2] {
-        \textbf{Model Training}\\[2pt]
-        \scriptsize 8 ML Algorithms\\
-        \scriptsize Hyperparameter Tuning\\
-        \scriptsize Cross-Validation
+    \node (s3) [stage=accentamber, below=of s2] {
+        \textbf{Stage 3: Model Training} --- 8 ML Models $\cdot$ Hyperparameter Tuning $\cdot$ Best: LightGBM ($R^2 = 0.9312$)
     };
 
-    % Stage 4
-    \node (s4) [mainbox=accentteal, right=of s3] {
-        \textbf{Deployment}\\[2pt]
-        \scriptsize Flask REST API\\
-        \scriptsize Chart.js Dashboard\\
-        \scriptsize Real-time Inference
+    \node (s4) [stage=accentteal, below=of s3] {
+        \textbf{Stage 4: Deployment} --- Flask REST API $\cdot$ Chart.js Dashboard $\cdot$ Real-time Inference
     };
 
     % Arrows
     \draw [arrow] (s1) -- (s2);
     \draw [arrow] (s2) -- (s3);
     \draw [arrow] (s3) -- (s4);
-
-    % Sub-detail for Feature Engineering
-    \node (s2_detail) [subbox, below=0.5cm of s2] {
-        \textbullet\ Soil: N, P, K, pH, OC\%\\
-        \textbullet\ Climate: Temp, Humidity, Rain, Sun\\
-        \textbullet\ Spatial: Lat, Long, State, District\\
-        \textbullet\ Categorical: Crop (19 types)
-    };
-    \draw [dotted, thick, accentpurple!60] (s2) -- (s2_detail);
-
-    % Sub-detail for Model Training
-    \node (s3_detail) [subbox, below=0.5cm of s3] {
-        \textbullet\ Best: LightGBM ($R^2 = 0.9312$)\\
-        \textbullet\ XGBoost ($R^2 = 0.9287$)\\
-        \textbullet\ Random Forest ($R^2 = 0.9245$)\\
-        \textbullet\ RMSE: 0.5765 k tonnes
-    };
-    \draw [dotted, thick, accentamber!60] (s3) -- (s3_detail);
 
 \end{tikzpicture}
 \caption{End-to-End System Pipeline for Indian Crop Production Analytics.}
@@ -391,7 +348,7 @@ Figure~\ref{fig:system_pipeline} details the complete execution pipeline.
 \subsection{Model Performance}
 We evaluated eight machine learning models. Table~\ref{tab:model_rankings} presents the complete ranking by $R^2$ score.
 
-\begin{table}[htbp]
+\begin{table}[H]
 \caption{Model Evaluation Performance Ranking}
 \label{tab:model_rankings}
 \centering

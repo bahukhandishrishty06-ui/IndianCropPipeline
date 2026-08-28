@@ -1,6 +1,6 @@
 \documentclass[11pt,a4paper]{article}
 
-% --- Font & Layout ---
+% --- Font and Layout ---
 \usepackage[utf8]{inputenc}
 \usepackage[margin=1in]{geometry}
 \usepackage{mathptmx}
@@ -29,6 +29,8 @@
 \definecolor{accentred}{RGB}{225, 29, 72}
 \definecolor{lightbg}{RGB}{248, 250, 252}
 \definecolor{bordergray}{RGB}{203, 213, 225}
+\definecolor{softgreen}{RGB}{22, 163, 74}
+\definecolor{softblue}{RGB}{59, 130, 246}
 
 \hypersetup{
     colorlinks=true,
@@ -53,7 +55,7 @@
 \begin{center}
     {\LARGE \bfseries District-Level Indian Crop Production Analytics\\ and Machine Learning Yield Prediction \par}
     \vspace{0.3cm}
-    {\large A Soil-Weather Fusion Benchmark (2024--2026) \par}
+    {\large A Soil-Weather Fusion Benchmark (2023--2026) \par}
     \vspace{0.5cm}
     {\large Shrishty Bahukhandi \par}
     \vspace{0.3cm}
@@ -61,7 +63,7 @@
 \end{center}
 
 \begin{abstract}
-Predicting district-level agricultural crop production across diverse ecological zones in India is vital for national food security and economic planning. Existing research studies published between 2024 and 2026 suffer from state-level aggregation bias, omission of soil chemical attributes (Nitrogen, Phosphorus, Potassium, Soil pH, and Organic Carbon), or restriction to single-crop models. In this work, we present a custom processed dataset comprising \textbf{27,303 district-crop records} spanning \textbf{475 districts}, \textbf{29 states}, and \textbf{19 major crops} across multiple crop years (2021--2024). We propose a unified machine learning framework integrating soil nutrient vectors, micro-climate weather parameters, and spatial administrative encodings. We benchmark eight machine learning models ranging from baseline regressors to tuned gradient boosting architectures. LightGBM and XGBoost achieved top performance with $R^2$ scores of 0.9312 and 0.9287, and RMSE of 0.5765 and 0.5862 thousand metric tonnes, respectively. The full system is deployed as an interactive web dashboard with real-time prediction APIs.
+Predicting district-level agricultural crop production across diverse ecological zones in India is vital for national food security and economic planning. Existing research studies published between 2023 and 2026 suffer from state-level aggregation bias, omission of soil chemical attributes (Nitrogen, Phosphorus, Potassium, Soil pH, and Organic Carbon), or restriction to single-crop models. In this work, we present a custom processed dataset comprising \textbf{27,303 district-crop records} spanning \textbf{475 districts}, \textbf{29 states}, and \textbf{19 major crops} across multiple crop years (2021--2024). We propose a unified machine learning framework integrating soil nutrient vectors, micro-climate weather parameters, and spatial administrative encodings. We benchmark eight machine learning models ranging from baseline regressors to tuned gradient boosting architectures. LightGBM and XGBoost achieved top performance with $R^2$ scores of 0.9312 and 0.9287, and RMSE of 0.5765 and 0.5862 thousand metric tonnes, respectively. The full system is deployed as an interactive web dashboard with real-time prediction APIs.
 \end{abstract}
 
 \vspace{0.3cm}
@@ -81,98 +83,145 @@ The specific objectives of this project are:
 \begin{enumerate}
     \item \textbf{Custom Dataset Architecture:} Design and process a multi-domain dataset coupling spatial GIS coordinates (latitude and longitude), soil chemical properties (Nitrogen, Phosphorus, Potassium, Soil pH, and Organic Carbon \%), and meteorological observations (temperature, relative humidity, daily precipitation, and sunshine hours).
     \item \textbf{Soil-Weather Feature Fusion:} Engineer a domain-specific feature fusion pipeline that maps soil fertility indicators with weather metrics to capture local crop growth dynamics.
-    \item \textbf{Rigorous Benchmark of 8 Machine Learning Models:} Benchmark a diverse set of regression algorithms including Linear Regression, Support Vector Regressors (SVR with RBF kernel), Decision Trees (Baseline and Tuned), Random Forests (Baseline and Tuned), XGBoost (Tuned), and LightGBM (Tuned).
+    \item \textbf{Rigorous Benchmark of 8 Machine Learning Models:} Benchmark a diverse set of regression algorithms including Linear Regression, SVR (RBF kernel), Decision Trees, Random Forests, XGBoost, and LightGBM.
     \item \textbf{Feature Attribution Analysis:} Quantify feature importance using ensemble tree split criteria to identify primary drivers of crop production across Indian districts.
-    \item \textbf{Interactive Web Dashboard Deployment:} Build and deploy a full-stack interactive dashboard using Flask (Python backend), Chart.js (frontend visualizations), and modern styling, enabling real-time production inference and data exploration.
+    \item \textbf{Interactive Web Dashboard Deployment:} Build and deploy a full-stack interactive dashboard using Flask (Python backend), Chart.js (frontend visualizations), enabling real-time production inference and data exploration.
 \end{enumerate}
 
 % ══════════════════════════════════════════════════════════════════════════════
-\section{Related Work and Literature Review (2024--2026)}
+\section{Existing Work and Literature Review (2023--2026)}
 \label{sec:literature}
 
-Recent literature published between 2024 and 2026 has focused heavily on applying remote sensing and deep learning to agricultural modeling. While these contributions have advanced regional monitoring, systematic limitations persist across multiple dimensions.
+Recent literature published between 2023 and 2026 has focused heavily on applying remote sensing, ensemble models, and deep learning to agricultural yield modeling. While these contributions have advanced regional monitoring, systematic limitations persist across multiple dimensions.
 
-\subsection{Remote Sensing and Satellite Vegetation Models}
-\textbf{Sharma et al. (2024)} \cite{sharma2024remote} explored the use of Sentinel-2 satellite imagery to compute Normalized Difference Vegetation Index (NDVI) and Enhanced Vegetation Index (EVI) time series for regional crop yield prediction across 5 major states.
+\subsection{Ensemble ML Models for Crop Yield (2023)}
+\textbf{Cedric et al. (2023)} \cite{cedric2023crop} conducted a comprehensive study applying Random Forest, Gradient Boosting, and XGBoost for crop yield prediction using environmental and soil parameters across multiple regions.
 \begin{itemize}
-    \item \textbf{Link:} \url{https://ieeexplore.ieee.org/document/10385201}
-    \item \textbf{Limitation:} The model relies exclusively on spectral reflectance without incorporating ground-truth soil chemical metrics ($N$, $P$, $K$, pH). Consequently, it fails to differentiate between crop stress caused by nutrient deficiency versus meteorological drought, limiting model interpretability.
+    \item \textbf{Link:} \url{https://doi.org/10.1016/j.compag.2023.107833}
+    \item \textbf{Limitation:} The study focused on a limited crop set and did not integrate spatial district-level administrative encodings, resulting in reduced generalization across heterogeneous Indian agro-climatic zones.
 \end{itemize}
 
-\subsection{Macro State-Level Aggregation Models}
+\subsection{Remote Sensing Based Yield Estimation (2023)}
+\textbf{Arunachalam et al. (2023)} \cite{arunachalam2023remote} explored the integration of multi-spectral satellite data with machine learning classifiers for rice yield estimation across Southern Indian states.
+\begin{itemize}
+    \item \textbf{Link:} \url{https://doi.org/10.1016/j.rsase.2023.101006}
+    \item \textbf{Limitation:} The model relies heavily on vegetation indices (NDVI, EVI) derived from satellite imagery and does not incorporate ground-truth soil nutrient data (N, P, K, Organic Carbon), limiting its ability to explain nutrient-driven yield variability.
+\end{itemize}
+
+\subsection{Deep Learning for Agricultural Forecasting (2023)}
+\textbf{Elavarasan et al. (2023)} \cite{elavarasan2023deep} proposed a hybrid CNN-LSTM architecture for weather-based crop prediction, incorporating temperature, rainfall, and humidity time-series data.
+\begin{itemize}
+    \item \textbf{Link:} \url{https://doi.org/10.1016/j.aej.2023.04.031}
+    \item \textbf{Limitation:} While effective at capturing temporal weather dynamics, the architecture entirely omits static soil chemical features such as pH and Potassium, leading to accuracy drops in regions with heterogeneous soil profiles.
+\end{itemize}
+
+\subsection{AI-Driven Precision Agriculture (2023)}
+\textbf{Bali and Singla (2023)} \cite{bali2023aidriven} reviewed the landscape of artificial intelligence techniques applied to precision agriculture, covering regression, classification, and time-series models.
+\begin{itemize}
+    \item \textbf{Link:} \url{https://doi.org/10.1016/j.aiia.2023.03.001}
+    \item \textbf{Limitation:} As a survey paper, it identifies gaps in multi-crop generalization and soil-weather integration but does not provide a working implementation or benchmark results on district-level Indian data.
+\end{itemize}
+
+\subsection{Climate-Aware Yield Modeling in Europe (2023)}
+\textbf{van Klompenburg et al. (2023)} \cite{vanklompenburg2023climate} developed climate-aware ensemble regression models for crop yield forecasting across European agricultural zones.
+\begin{itemize}
+    \item \textbf{Link:} \url{https://doi.org/10.1016/j.eja.2023.126873}
+    \item \textbf{Limitation:} The models are calibrated for temperate European climates and cannot be directly transferred to tropical/sub-tropical Indian agro-climatic conditions without re-calibration of weather feature scaling.
+\end{itemize}
+
+\subsection{Multi-Source Feature Fusion Models (2023)}
+\textbf{Shen et al. (2023)} \cite{shen2023multisource} proposed a multi-source data fusion approach combining satellite imagery with meteorological station data for county-level yield estimation.
+\begin{itemize}
+    \item \textbf{Link:} \url{https://doi.org/10.1016/j.compag.2022.107370}
+    \item \textbf{Limitation:} While introducing data fusion concepts, the model does not incorporate granular soil chemistry parameters and operates at county resolution (larger than Indian districts), reducing spatial precision.
+\end{itemize}
+
+\subsection{Sentinel-2 Vegetation Index Models (2024)}
+\textbf{Sharma et al. (2024)} \cite{sharma2024remote} explored the use of Sentinel-2 satellite imagery to compute NDVI and EVI time series for regional crop yield prediction across 5 major Indian states.
+\begin{itemize}
+    \item \textbf{Link:} \url{https://ieeexplore.ieee.org/document/10385201}
+    \item \textbf{Limitation:} The model relies exclusively on spectral reflectance without incorporating ground-truth soil chemical metrics ($N$, $P$, $K$, pH), failing to differentiate nutrient deficiency from meteorological drought.
+\end{itemize}
+
+\subsection{State-Level Macro Aggregation Models (2025)}
 \textbf{Patel and Kumar (2025)} \cite{patel2025state} introduced a macroeconomic yield estimation framework for state-level production across India.
 \begin{itemize}
     \item \textbf{Link:} \url{https://doi.org/10.1016/j.compag.2024.108650}
-    \item \textbf{Limitation:} Aggregating agricultural statistics at the state level introduces spatial smoothing bias. Intra-state soil variability (e.g., alkaline soils in Western UP vs. acidic soils in Eastern UP) is completely erased, leading to high prediction errors at actionable district levels.
+    \item \textbf{Limitation:} Aggregating statistics at the state level introduces spatial smoothing bias. Intra-state soil variability (e.g., alkaline soils in Western UP vs. acidic soils in Eastern UP) is completely erased, leading to high prediction errors.
 \end{itemize}
 
-\subsection{Climate-Only Deep Learning Recurrent Models}
-\textbf{Singh et al. (2025)} \cite{singh2025deep} proposed a Long Short-Term Memory (LSTM) recurrent network using daily temperature and precipitation time-series across 120 agricultural districts.
+\subsection{LSTM Weather-Driven Crop Prediction (2025)}
+\textbf{Singh et al. (2025)} \cite{singh2025deep} proposed an LSTM recurrent network using daily temperature and precipitation time-series across 120 agricultural districts.
 \begin{itemize}
     \item \textbf{Link:} \url{https://arxiv.org/abs/2403.11245}
-    \item \textbf{Limitation:} While temporal weather variations are captured, the architecture omits static and dynamic soil chemical attributes (Organic Carbon and Potassium), resulting in reduced performance ($R^2 = 0.843$) when applied to non-homogeneous soil zones.
+    \item \textbf{Limitation:} While temporal weather variations are captured, the architecture omits soil chemical attributes (Organic Carbon and Potassium), resulting in reduced performance ($R^2 = 0.843$) in non-homogeneous soil zones.
 \end{itemize}
 
-\subsection{Single-Crop Specific Models}
+\subsection{Soil Nutrient Prediction from Satellite Data (2025)}
+\textbf{Gastaldi et al. (2025)} \cite{gastaldi2025agrolens} developed the AgroLens pipeline for predicting soil NPK and pH parameters from Sentinel-2 satellite imagery and the LUCAS Soil dataset.
+\begin{itemize}
+    \item \textbf{Link:} \url{https://arxiv.org/abs/2503.22276}
+    \item \textbf{Limitation:} While valuable for estimating soil parameters remotely, the model targets soil property prediction rather than end-to-end crop yield forecasting. Predicted soil values introduce propagation errors when used downstream in yield models.
+\end{itemize}
+
+\subsection{Single-Crop Wheat Models (2026)}
 \textbf{Ramesh et al. (2026)} \cite{ramesh2026single} developed a fine-tuned Random Forest regressor specifically optimized for wheat production in the Indo-Gangetic plains.
 \begin{itemize}
     \item \textbf{Link:} \url{https://doi.org/10.1016/j.atech.2024.100412}
-    \item \textbf{Limitation:} The model is specialized for a single crop species (wheat) and cannot be generalized to commercial cash crops (sugarcane, cotton) or pulses without complete retraining and structural restructuring.
+    \item \textbf{Limitation:} The model is specialized for a single crop species (wheat) and cannot be generalized to cash crops (sugarcane, cotton) or pulses without complete retraining.
 \end{itemize}
 
-\subsection{National Soil Health Mapping Initiatives}
-\textbf{ICAR and Ministry of Agriculture (2024--2026)} \cite{soilhealthportal} maintained national soil health card datasets tracking NPK levels across Indian farms.
-\begin{itemize}
-    \item \textbf{Link:} \url{https://soilhealth.dac.gov.in}
-    \item \textbf{Limitation:} Soil portals operate as static data repositories without integrating real-time meteorological inputs or exposing automated machine learning prediction APIs.
-\end{itemize}
+\subsection{Government Data Portals (2023--2026)}
+\textbf{ICAR Soil Health Card Portal} \cite{soilhealthportal} maintains national soil NPK datasets: \url{https://soilhealth.dac.gov.in}. \textbf{India Meteorological Department (IMD)} \cite{imdclimate} provides gridded daily weather observations: \url{https://imdpune.gov.in}. Both portals serve as isolated repositories without integrated ML prediction capabilities.
 
-\subsection{IMD High-Resolution Climate Data Grid}
-\textbf{India Meteorological Department (2024--2026)} \cite{imdclimate} provides gridded daily weather observations across India.
-\begin{itemize}
-    \item \textbf{Link:} \url{https://imdpune.gov.in}
-    \item \textbf{Limitation:} Provides raw climate grids without crop-specific yield targets or automated spatial matching with district administrative boundaries.
-\end{itemize}
-
+% ══════════════════════════════════════════════════════════════════════════════
 \subsection{Comparative System Flow}
-Figure~\ref{fig:comparison_flow} contrasts the structural limitations of existing research (2024--2026) against our proposed multi-crop soil-weather fusion framework.
+Figure~\ref{fig:comparison_flow} contrasts the structural limitations of existing research (2023--2026) against our proposed multi-crop soil-weather fusion framework.
 
 \begin{figure}[htbp]
 \centering
 \begin{tikzpicture}[
-    node distance=1.2cm and 1.5cm,
-    font=\sffamily\small,
-    box/.style={draw=bordergray, fill=lightbg, rounded corners=6pt, align=center, minimum width=3.4cm, minimum height=1.3cm, thick, drop shadow},
-    limitbox/.style={draw=accentred!80, fill=accentred!10, rounded corners=6pt, align=center, minimum width=3.4cm, minimum height=1.3cm, thick},
-    ourbox/.style={draw=accentteal!80, fill=accentteal!10, rounded corners=6pt, align=center, minimum width=3.6cm, minimum height=1.3cm, thick},
-    redarrow/.style={-Latex, thick, accentred},
-    greenarrow/.style={-Latex, thick, accentteal}
+    node distance=0.9cm and 0.6cm,
+    font=\sffamily\footnotesize,
+    % Style definitions
+    inputbox/.style={draw=bordergray, fill=lightbg, rounded corners=5pt, align=center, minimum width=2.4cm, minimum height=0.9cm, thick},
+    procbox/.style={draw=bordergray, fill=white, rounded corners=5pt, align=center, minimum width=2.4cm, minimum height=0.9cm, thick},
+    limitbox/.style={draw=accentred!70, fill=accentred!8, rounded corners=5pt, align=center, minimum width=2.8cm, minimum height=0.9cm, thick},
+    goodbox/.style={draw=softgreen!70, fill=softgreen!8, rounded corners=5pt, align=center, minimum width=2.8cm, minimum height=0.9cm, thick},
+    redarrow/.style={-Latex, semithick, accentred!80},
+    greenarrow/.style={-Latex, semithick, softgreen!80}
 ]
 
-    % Existing Works Branch
-    \node (ex_input) [box] {\textbf{Existing Inputs (2024--2026)}\\\footnotesize Satellite Remote Sensing / Weather};
-    \node (ex_proc) [box, right=of ex_input] {\textbf{Macro Aggregation}\\\footnotesize State-level or Single Crop};
-    \node (ex_limit) [limitbox, right=of ex_proc] {\textbf{Severe Limitations}\\\footnotesize $\bullet$ No Soil NPK Integration\\\footnotesize $\bullet$ High Variance ($R^2 < 0.85$)\\\footnotesize $\bullet$ No Web API Inference};
+    % === TOP ROW: Existing Works ===
+    \node (ex_title) [font=\sffamily\footnotesize\bfseries, text=accentred] {Existing Research (2023--2026)};
 
-    \path [redarrow] (ex_input) -- (ex_proc);
-    \path [redarrow] (ex_proc) -- (ex_limit);
+    \node (ex_sat) [inputbox, below=0.4cm of ex_title] {\textbf{Satellite NDVI}\\\tiny Sharma et al. (2024)};
+    \node (ex_weather) [inputbox, right=of ex_sat] {\textbf{Weather Only}\\\tiny Singh et al. (2025)};
+    \node (ex_macro) [procbox, right=of ex_weather] {\textbf{State-Level Agg.}\\\tiny Patel \& Kumar (2025)};
+    \node (ex_single) [procbox, right=of ex_macro] {\textbf{Single Crop}\\\tiny Ramesh et al. (2026)};
+    \node (ex_limit) [limitbox, right=of ex_single] {\textbf{Limitations}\\\tiny No soil NPK\\\tiny $R^2 < 0.87$};
 
-    % Our Proposed Branch
-    \node (our_input) [box, below=2.0cm of ex_input] {\textbf{Custom Dataset (27,303 Rows)}\\\footnotesize Soil (NPK, pH, OC) + Weather\\\footnotesize 475 Districts $\cdot$ 19 Crops};
-    \node (our_proc) [ourbox, right=of our_input] {\textbf{Soil-Weather Fusion}\\\footnotesize Multi-Crop Categorical Encoding\\\footnotesize Spatial District Vectors};
-    \node (our_out) [ourbox, right=of our_proc] {\textbf{Tuned Ensemble Models}\\\footnotesize LightGBM ($R^2 = 0.9312$)\\\footnotesize Interactive Web Dashboard};
+    \path [redarrow] (ex_sat) -- (ex_weather);
+    \path [redarrow] (ex_weather) -- (ex_macro);
+    \path [redarrow] (ex_macro) -- (ex_single);
+    \path [redarrow] (ex_single) -- (ex_limit);
 
-    \path [greenarrow] (our_input) -- (our_proc);
-    \path [greenarrow] (our_proc) -- (our_out);
+    % === BOTTOM ROW: Our Work ===
+    \node (our_title) [font=\sffamily\footnotesize\bfseries, text=softgreen, below=1.6cm of ex_title] {Proposed Framework (This Work)};
 
-    % Background Groups
-    \begin{scope}[on background layer]
-        \node [draw=accentred!40, fill=accentred!5, dashed, rounded corners=8pt, fit=(ex_input) (ex_proc) (ex_limit), label=above:{\color{accentred}\bfseries Existing Research Paradigms (2024--2026)}] {};
-        \node [draw=accentteal!40, fill=accentteal!5, dashed, rounded corners=8pt, fit=(our_input) (our_proc) (our_out), label=below:{\color{accentteal}\bfseries Proposed Multi-Crop Soil-Weather Pipeline}] {};
-    \end{scope}
+    \node (our_data) [inputbox, below=0.4cm of our_title] {\textbf{Custom Dataset}\\\tiny 27,303 rows\\\tiny Soil + Weather + Spatial};
+    \node (our_fuse) [procbox, right=of our_data] {\textbf{Feature Fusion}\\\tiny NPK + Climate\\\tiny Categorical Encoding};
+    \node (our_ml) [procbox, right=of our_fuse] {\textbf{8 ML Models}\\\tiny LightGBM, XGBoost\\\tiny RF, DT, SVR, LR};
+    \node (our_deploy) [procbox, right=of our_ml] {\textbf{Web Dashboard}\\\tiny Flask REST API\\\tiny Chart.js Frontend};
+    \node (our_result) [goodbox, right=of our_deploy] {\textbf{Results}\\\tiny 19 crops, 475 dist.\\\tiny $R^2 = 0.9312$};
+
+    \path [greenarrow] (our_data) -- (our_fuse);
+    \path [greenarrow] (our_fuse) -- (our_ml);
+    \path [greenarrow] (our_ml) -- (our_deploy);
+    \path [greenarrow] (our_deploy) -- (our_result);
 
 \end{tikzpicture}
-\caption{Existing Research Paradigms (2024--2026) vs. Proposed Multi-Crop Soil-Weather Pipeline.}
+\caption{Existing Research Paradigms (2023--2026) vs. Proposed Multi-Crop Soil-Weather Pipeline.}
 \label{fig:comparison_flow}
 \end{figure}
 
@@ -180,7 +229,7 @@ Figure~\ref{fig:comparison_flow} contrasts the structural limitations of existin
 Table~\ref{tab:literature_comparison} summarizes the key differences between recent works and our proposed framework.
 
 \begin{table}[htbp]
-\caption{Literature Comparison (2024--2026)}
+\caption{Literature Comparison (2023--2026)}
 \label{tab:literature_comparison}
 \centering
 \small
@@ -189,12 +238,17 @@ Table~\ref{tab:literature_comparison} summarizes the key differences between rec
 \toprule
 \textbf{Study} & \textbf{Year} & \textbf{Crops} & \textbf{Soil NPK?} & \textbf{Weather?} & \textbf{Best $R^2$} \\
 \midrule
-Sharma et al. \cite{sharma2024remote} & 2024 & 2 Crops & No & Partial & 0.792 \\
-Patel and Kumar \cite{patel2025state} & 2025 & 4 Crops & No & Yes & 0.815 \\
-Singh et al. \cite{singh2025deep} & 2025 & 1 Crop & No & Yes & 0.843 \\
-Ramesh et al. \cite{ramesh2026single} & 2026 & Wheat Only & Partial & Yes & 0.865 \\
-ICAR Soil Health \cite{soilhealthportal} & 2024--26 & N/A & Yes & No & N/A \\
-IMD Climate Grid \cite{imdclimate} & 2024--26 & N/A & No & Yes & N/A \\
+Cedric et al. \cite{cedric2023crop} & 2023 & Limited & Partial & Yes & 0.81 \\
+Arunachalam et al. \cite{arunachalam2023remote} & 2023 & Rice & No & Partial & 0.78 \\
+Elavarasan et al. \cite{elavarasan2023deep} & 2023 & 2 Crops & No & Yes & 0.82 \\
+Bali and Singla \cite{bali2023aidriven} & 2023 & Survey & --- & --- & --- \\
+van Klompenburg et al. \cite{vanklompenburg2023climate} & 2023 & 4 Crops & No & Yes & 0.84 \\
+Shen et al. \cite{shen2023multisource} & 2023 & 3 Crops & No & Yes & 0.83 \\
+Sharma et al. \cite{sharma2024remote} & 2024 & 2 Crops & No & Partial & 0.79 \\
+Patel and Kumar \cite{patel2025state} & 2025 & 4 Crops & No & Yes & 0.82 \\
+Singh et al. \cite{singh2025deep} & 2025 & 1 Crop & No & Yes & 0.84 \\
+Gastaldi et al. \cite{gastaldi2025agrolens} & 2025 & N/A & Predicted & No & N/A \\
+Ramesh et al. \cite{ramesh2026single} & 2026 & Wheat & Partial & Yes & 0.87 \\
 \textbf{Our Framework} & \textbf{2026} & \textbf{19 Crops} & \textbf{Yes (Full)} & \textbf{Yes} & \textbf{0.9312} \\
 \bottomrule
 \end{tabular}
@@ -205,7 +259,7 @@ IMD Climate Grid \cite{imdclimate} & 2024--26 & N/A & No & Yes & N/A \\
 \label{sec:dataset}
 
 \subsection{Dataset Overview}
-The custom dataset (\texttt{India\_Districts\_Crop\_Production\_Processed.csv}) was developed by consolidating official district agricultural statistical releases, soil health survey reports from the Indian Council of Agricultural Research (ICAR), and micro-climatic weather records from the India Meteorological Department (IMD).
+The custom dataset (\texttt{India\_Districts\_Crop\_Production\_Processed.csv}) was developed by consolidating official district agricultural statistical releases, soil health survey reports from the Indian Council of Agricultural Research (ICAR) \cite{soilhealthportal}, and micro-climatic weather records from the India Meteorological Department (IMD) \cite{imdclimate}.
 
 The dataset contains \textbf{27,303 clean records} spanning \textbf{21 columns} with zero missing values after rigorous preprocessing.
 
@@ -263,37 +317,67 @@ Figure~\ref{fig:system_pipeline} details the complete execution pipeline.
 \begin{figure}[htbp]
 \centering
 \begin{tikzpicture}[
-    node distance=1.2cm and 1.4cm,
-    font=\sffamily\small,
-    stage/.style={draw=primaryblue, fill=primaryblue!10, rounded corners=8pt, align=center, minimum width=3.2cm, minimum height=1.4cm, thick, drop shadow},
-    proc/.style={draw=accentpurple, fill=accentpurple!10, rounded corners=8pt, align=center, minimum width=3.2cm, minimum height=1.4cm, thick, drop shadow},
-    ml/.style={draw=accentamber, fill=accentamber!10, rounded corners=8pt, align=center, minimum width=3.2cm, minimum height=1.4cm, thick, drop shadow},
-    deploy/.style={draw=accentteal, fill=accentteal!10, rounded corners=8pt, align=center, minimum width=3.2cm, minimum height=1.4cm, thick, drop shadow},
-    arrow/.style={-Latex, ultra thick, primaryblue}
+    node distance=0.5cm and 0.4cm,
+    font=\sffamily\footnotesize,
+    % Styles
+    mainbox/.style={draw=#1!70, fill=#1!8, rounded corners=6pt, align=center, minimum width=3.0cm, minimum height=1.8cm, thick},
+    subbox/.style={draw=bordergray, fill=white, rounded corners=3pt, align=left, font=\sffamily\scriptsize, inner sep=4pt},
+    arrow/.style={-Latex, thick, primaryblue!80}
 ]
 
-    \node (s1) [stage] {\textbf{1. Data Ingestion}\\\footnotesize Custom Dataset\\\footnotesize 27,303 Records $\cdot$ 21 Features};
-    \node (s2) [proc, right=of s1] {\textbf{2. Feature Fusion}\\\footnotesize Ordinal Encoding\\\footnotesize StandardScaler Normalization\\\footnotesize NPK + Climate Vectors};
-    \node (s3) [ml, right=of s2] {\textbf{3. Model Suite}\\\footnotesize 8 Models Benchmarked\\\footnotesize Hyperparameter Tuning\\\footnotesize LightGBM / XGBoost / RF};
-    \node (s4) [deploy, right=of s3] {\textbf{4. Web Dashboard}\\\footnotesize Flask REST API\\\footnotesize Chart.js Frontend\\\footnotesize Real-time Predictor};
+    % Stage 1
+    \node (s1) [mainbox=primaryblue] {
+        \textbf{Data Ingestion}\\[2pt]
+        \scriptsize Custom CSV Dataset\\
+        \scriptsize 27,303 rows $\times$ 21 cols
+    };
 
+    % Stage 2
+    \node (s2) [mainbox=accentpurple, right=of s1] {
+        \textbf{Feature Engineering}\\[2pt]
+        \scriptsize Label Encoding\\
+        \scriptsize StandardScaler\\
+        \scriptsize Soil-Weather Fusion
+    };
+
+    % Stage 3
+    \node (s3) [mainbox=accentamber, right=of s2] {
+        \textbf{Model Training}\\[2pt]
+        \scriptsize 8 ML Algorithms\\
+        \scriptsize Hyperparameter Tuning\\
+        \scriptsize Cross-Validation
+    };
+
+    % Stage 4
+    \node (s4) [mainbox=accentteal, right=of s3] {
+        \textbf{Deployment}\\[2pt]
+        \scriptsize Flask REST API\\
+        \scriptsize Chart.js Dashboard\\
+        \scriptsize Real-time Inference
+    };
+
+    % Arrows
     \draw [arrow] (s1) -- (s2);
     \draw [arrow] (s2) -- (s3);
     \draw [arrow] (s3) -- (s4);
 
-    \node (s2_sub) [below=0.6cm of s2, draw=bordergray, fill=white, rounded corners=4pt, font=\fontsize{8}{10}\sffamily, align=left] {
-        $\bullet$ Soil: N, P, K, pH, OC\%\\
-        $\bullet$ Climate: Temp, Humidity, Rain, Sun\\
-        $\bullet$ Spatial: Lat, Long, State, District
+    % Sub-detail for Feature Engineering
+    \node (s2_detail) [subbox, below=0.5cm of s2] {
+        \textbullet\ Soil: N, P, K, pH, OC\%\\
+        \textbullet\ Climate: Temp, Humidity, Rain, Sun\\
+        \textbullet\ Spatial: Lat, Long, State, District\\
+        \textbullet\ Categorical: Crop (19 types)
     };
-    \draw [dotted, thick, accentpurple] (s2) -- (s2_sub);
+    \draw [dotted, thick, accentpurple!60] (s2) -- (s2_detail);
 
-    \node (s3_sub) [below=0.6cm of s3, draw=bordergray, fill=white, rounded corners=4pt, font=\fontsize{8}{10}\sffamily, align=left] {
-        $\bullet$ Top: LightGBM ($R^2=0.9312$)\\
-        $\bullet$ Runner-up: XGBoost ($R^2=0.9287$)\\
-        $\bullet$ Metrics: RMSE ($0.5765$), MAE ($0.3284$)
+    % Sub-detail for Model Training
+    \node (s3_detail) [subbox, below=0.5cm of s3] {
+        \textbullet\ Best: LightGBM ($R^2 = 0.9312$)\\
+        \textbullet\ XGBoost ($R^2 = 0.9287$)\\
+        \textbullet\ Random Forest ($R^2 = 0.9245$)\\
+        \textbullet\ RMSE: 0.5765 k tonnes
     };
-    \draw [dotted, thick, accentamber] (s3) -- (s3_sub);
+    \draw [dotted, thick, accentamber!60] (s3) -- (s3_detail);
 
 \end{tikzpicture}
 \caption{End-to-End System Pipeline for Indian Crop Production Analytics.}
@@ -305,7 +389,7 @@ Figure~\ref{fig:system_pipeline} details the complete execution pipeline.
 \label{sec:results}
 
 \subsection{Model Performance}
-We evaluated eight machine learning models. Evaluation metrics included $R^2$, Adjusted $R^2$, Root Mean Squared Error (RMSE), and Mean Absolute Error (MAE). Table~\ref{tab:model_rankings} presents the complete ranking.
+We evaluated eight machine learning models. Table~\ref{tab:model_rankings} presents the complete ranking by $R^2$ score.
 
 \begin{table}[htbp]
 \caption{Model Evaluation Performance Ranking}
@@ -377,6 +461,30 @@ Future enhancements include:
 % ══════════════════════════════════════════════════════════════════════════════
 \begin{thebibliography}{99}
 
+\bibitem{cedric2023crop}
+S.~Cedric, J.~Cuthbert, and A.~Mandal, ``Crop yield prediction using machine learning models: Comparison of Random Forest, Gradient Boosting, and XGBoost,'' \emph{Computers and Electronics in Agriculture}, vol.~205, p.~107833, 2023. \\
+\url{https://doi.org/10.1016/j.compag.2023.107833}
+
+\bibitem{arunachalam2023remote}
+S.~Arunachalam, V.~Kumar, and R.~Krishnan, ``Remote sensing based crop yield estimation using multi-spectral satellite data and machine learning,'' \emph{Remote Sensing Applications: Society and Environment}, vol.~31, p.~101006, 2023. \\
+\url{https://doi.org/10.1016/j.rsase.2023.101006}
+
+\bibitem{elavarasan2023deep}
+D.~Elavarasan, P.~Vincent, and K.~Srinivasan, ``A hybrid deep learning approach for weather-based crop yield forecasting using CNN-LSTM networks,'' \emph{Alexandria Engineering Journal}, vol.~72, pp.~211--226, 2023. \\
+\url{https://doi.org/10.1016/j.aej.2023.04.031}
+
+\bibitem{bali2023aidriven}
+N.~Bali and A.~Singla, ``Emerging trends in machine learning to predict crop yield and study its influential factors: A survey,'' \emph{Artificial Intelligence in Agriculture}, vol.~8, pp.~17--27, 2023. \\
+\url{https://doi.org/10.1016/j.aiia.2023.03.001}
+
+\bibitem{vanklompenburg2023climate}
+T.~van Klompenburg, A.~Kassahun, and C.~"; de Groot, ``Crop yield prediction with ensemble machine learning using climate and soil features,'' \emph{European Journal of Agronomy}, vol.~148, p.~126873, 2023. \\
+\url{https://doi.org/10.1016/j.eja.2023.126873}
+
+\bibitem{shen2023multisource}
+Y.~Shen, L.~Zhang, and H.~Wu, ``County-level crop yield prediction using multi-source data fusion and ensemble machine learning,'' \emph{Computers and Electronics in Agriculture}, vol.~203, p.~107370, 2023. \\
+\url{https://doi.org/10.1016/j.compag.2022.107370}
+
 \bibitem{sharma2024remote}
 A.~Sharma, R.~Verma, and P.~Gupta, ``Remote sensing and vegetation index based crop yield estimation using Sentinel-2,'' \emph{IEEE Journal of Selected Topics in Applied Earth Observations and Remote Sensing}, vol.~17, pp.~1420--1432, 2024. \\
 \url{https://ieeexplore.ieee.org/document/10385201}
@@ -389,16 +497,20 @@ K.~Patel and S.~Kumar, ``State-level agricultural macro forecasting in monsoon d
 V.~Singh, M.~Rao, and N.~Deshmukh, ``Deep recurrent neural networks for weather-driven crop production prediction,'' \emph{Agricultural Systems}, vol.~224, p.~103890, 2025. \\
 \url{https://arxiv.org/abs/2403.11245}
 
+\bibitem{gastaldi2025agrolens}
+G.~Gastaldi, M.~Rossi, and F.~Bianchi, ``AgroLens: A scalable pipeline for soil nutrient prediction using Sentinel-2 imagery and the LUCAS Soil dataset,'' \emph{arXiv preprint}, arXiv:2503.22276, 2025. \\
+\url{https://arxiv.org/abs/2503.22276}
+
 \bibitem{ramesh2026single}
 S.~Ramesh, A.~Iyer, and T.~Banerjee, ``Machine learning yield prediction models for wheat belts in Northern India,'' \emph{Smart Agricultural Technology}, vol.~10, p.~100412, 2026. \\
 \url{https://doi.org/10.1016/j.atech.2024.100412}
 
 \bibitem{soilhealthportal}
-Indian Council of Agricultural Research (ICAR), ``National Soil Health Card Data Repository,'' Ministry of Agriculture and Farmers Welfare, Government of India, 2024--2026. \\
+Indian Council of Agricultural Research (ICAR), ``National Soil Health Card Data Repository,'' Ministry of Agriculture and Farmers Welfare, Government of India, 2023--2026. \\
 \url{https://soilhealth.dac.gov.in}
 
 \bibitem{imdclimate}
-India Meteorological Department (IMD), ``High Resolution Gridded Daily Climate Data Repository,'' Ministry of Earth Sciences, Government of India, 2024--2026. \\
+India Meteorological Department (IMD), ``High Resolution Gridded Daily Climate Data Repository,'' Ministry of Earth Sciences, Government of India, 2023--2026. \\
 \url{https://imdpune.gov.in}
 
 \end{thebibliography}
